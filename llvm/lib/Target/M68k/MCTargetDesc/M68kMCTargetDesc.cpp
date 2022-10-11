@@ -1,4 +1,4 @@
-//===-- M68kMCTargetDesc.cpp - M68k Target Descriptions -----*- C++ -*-===//
+//===-- M68kMCTargetDesc.cpp - M68k Target Descriptions ---------*- C++ -*-===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -23,14 +23,15 @@
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/MCSymbol.h"
 #include "llvm/MC/MachineLocation.h"
+#include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/FormattedStream.h"
-#include "llvm/Support/TargetRegistry.h"
 
 using namespace llvm;
 
 #define GET_INSTRINFO_MC_DESC
+#define ENABLE_INSTR_PREDICATE_VERIFIER
 #include "M68kGenInstrInfo.inc"
 
 #define GET_SUBTARGETINFO_MC_DESC
@@ -50,7 +51,8 @@ static MCInstrInfo *createM68kMCInstrInfo() {
   return X;
 }
 
-static MCRegisterInfo *createM68kMCRegisterInfo(const Triple &TT) {
+static MCRegisterInfo *
+createM68kMCRegisterInfo(const Triple &TT, const MCTargetOptions &Options) {
   MCRegisterInfo *X = new MCRegisterInfo();
   InitM68kMCRegisterInfo(X, llvm::M68k::A0, 0, 0, llvm::M68k::PC);
   return X;
